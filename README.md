@@ -1,0 +1,3 @@
+# netty_demo
+外部class文件为netty的测试demo.
+websocket包中实现的是websocket结合netty实现简单通信的后端代码demo
