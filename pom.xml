@@ -12,13 +12,14 @@
         <module>demo01</module>
         <module>demo02</module>
         <module>demo03</module>
+        <module>demo04</module>
     </modules>
 
     <properties>
         <netty.version>4.1.32.Final</netty.version>
         <lombok.version>1.18.26</lombok.version>
-        <springboot.version>2.6.6</springboot.version>
-        <springboot.web.version>2.6.6</springboot.web.version>
+        <springboot.version>2.0.4.RELEASE</springboot.version>
+        <springboot.web.version>2.0.4.RELEASE</springboot.web.version>
     </properties>
 
     <build>

@@ -1,4 +1,4 @@
-package cn.xf.netty.client;
+package cn.xf.netty.web;
 
 import cn.xf.netty.utils.MsgUtil;
 import com.alibaba.fastjson.JSON;

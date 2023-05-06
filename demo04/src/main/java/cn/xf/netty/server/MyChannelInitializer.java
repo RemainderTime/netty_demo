@@ -1,12 +1,11 @@
-package cn.xf.netty.client;
+package cn.xf.netty.server;
 
-
-import cn.xf.netty.codec.ObjDecoder;
-import cn.xf.netty.codec.ObjEncoder;
-import cn.xf.netty.domain.MsgInfo;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpServerCodec;
+import io.netty.handler.stream.ChunkedWriteHandler;
 
 /**
  * @Description:
@@ -21,9 +20,11 @@ public class MyChannelInitializer extends ChannelInitializer<SocketChannel> {
 
 		ChannelPipeline p = socketChannel.pipeline();
 		//对象传输处理
-		p.addLast(new ObjDecoder(MsgInfo.class));
-		p.addLast(new ObjEncoder(MsgInfo.class));
+		p.addLast("http-codec", new HttpServerCodec());
+		p.addLast("aggregator", new HttpObjectAggregator(65536));
+		p.addLast("http-chunked", new ChunkedWriteHandler());
 
-		p.addLast(new MyClientHandler());
+		p.addLast(new MyServerHandler());
 	}
 }
+
