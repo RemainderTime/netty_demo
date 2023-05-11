@@ -1,5 +1,6 @@
 package cn.xf.im;
 
+import cn.xf.im.config.GlobalSetting;
 import cn.xf.im.server.NettyServer;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

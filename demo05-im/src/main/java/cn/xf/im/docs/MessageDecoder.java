@@ -41,7 +41,7 @@ public class MessageDecoder extends ByteToMessageDecoder {
 		/** 获取bodyLen*/
 		int bodyLen = in.readInt();
 
-		if (in.readableBytes() < imeiLength + bodyLen) {
+		if (in.readableBytes() < 10) {
 			in.resetReaderIndex();
 			return;
 		}

@@ -7,11 +7,9 @@ import com.sun.org.slf4j.internal.LoggerFactory;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.netty.handler.timeout.IdleStateHandler;
 
-import javax.annotation.Resource;
 
 /**
  * @Description:
@@ -29,8 +27,8 @@ public class NettyServer {
 
 	private static ServerBootstrap serverBootstrap = null;
 
-	@Autowired
-	private GlobalSetting globalSetting;
+//	@Autowired
+//	private GlobalSetting globalSetting;
 
 	public NettyServer() {
 
@@ -52,17 +50,12 @@ public class NettyServer {
 
 						//自定义编码协议
 						pipeline.addLast(new MessageDecoder());
-						pipeline.addLast(new SimpleChannelInboundHandler() {
-							@Override
-							protected void channelRead0(ChannelHandlerContext channelHandlerContext, Object o) throws Exception {
-
-
-							}
-						});
-
-
+						pipeline.addLast(new IdleStateHandler(2, 2, 10));
+						pipeline.addLast(new HeartBeatHandler(3000L));
+						pipeline.addLast(new MyServerHandler());
 					}
 				});
+
 	}
 
 
@@ -70,8 +63,9 @@ public class NettyServer {
 		serverBootstrap.bind(port);
 	}
 
-//	public static void main(String[] args) {
-//		NettyServer nettyServer = new NettyServer();
-//		nettyServer.start();
-//	}
+	public static void main(String[] args) {
+		GlobalSetting setting = new GlobalSetting();
+		NettyServer nettyServer = new NettyServer();
+		nettyServer.start(setting.baseServerPort);
+	}
 }

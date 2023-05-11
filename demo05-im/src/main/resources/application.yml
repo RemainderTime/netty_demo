@@ -5,3 +5,13 @@ server:
 netty:
   server:
     port: 9000
+
+
+# redis分布式锁
+redisson:
+  enabled: true
+  address: 'redis://10.14.2.10:6379'
+  password: '123456'
+  database: 0
+  connectionPoolSize: 4
+  connectionMinimumIdleSize: 4
