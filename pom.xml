@@ -22,6 +22,8 @@
         <springboot.version>2.0.4.RELEASE</springboot.version>
         <springboot.web.version>2.0.4.RELEASE</springboot.web.version>
         <redission.version>3.11.3</redission.version>
+        <amqp.version>1.4.2.RELEASE</amqp.version>
+        <zkclient.versi>0.1</zkclient.versi>
     </properties>
 
     <build>
@@ -68,6 +70,28 @@
                 <artifactId>redisson</artifactId>
                 <version>${redission.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-amqp</artifactId>
+                <version>${springboot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-test</artifactId>
+                <version>${springboot.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/com.github.sgroschupf/zkclient -->
+            <dependency>
+                <groupId>com.github.sgroschupf</groupId>
+                <artifactId>zkclient</artifactId>
+                <version>${zkclient.versi}</version>
+            </dependency>
+
+
         </dependencies>
     </dependencyManagement>
 

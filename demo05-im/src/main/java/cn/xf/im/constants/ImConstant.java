@@ -18,6 +18,14 @@ public class ImConstant {
 	public static final String Imei = " imei";
 
 	public static final String ReadTime = "readTime";
+	
+	//zookeeper 节点
+	public static final String ImCoreZkRoot = "/im-coreRoot";
+
+	public static final String ImCoreZkRootTcp = "/tcp";
+
+	public static final String ImCoreZkRootWeb = "/web";
+
 
 
 	public static class CommandConstant{
