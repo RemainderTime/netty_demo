@@ -2,9 +2,7 @@ package cn.xf.netty.server;
 
 import cn.xf.netty.utils.MsgUtil;
 import com.alibaba.fastjson.JSON;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.*;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.timeout.IdleStateEvent;
 
@@ -45,7 +43,21 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
 
 		socketChannelList.forEach(e -> {
 			if (channel != e) {
-				e.writeAndFlush("通知：" + channel.remoteAddress() + " 上线了~~~");
+				ChannelFuture channelFuture = e.writeAndFlush("通知：" + channel.remoteAddress() + " 上线了~~~");
+
+				//TODO 用于监听异步消息结果返回 不管是失败或者成功都会返回
+				channelFuture.addListener(new ChannelFutureListener() {    //3
+					@Override
+					public void operationComplete(ChannelFuture future) {
+						if (future.isSuccess()) {                //4
+							System.out.println("Write successful");
+						} else {
+							System.err.println("Write error");    //5
+							future.cause().printStackTrace();
+						}
+					}
+				});
+
 			}
 		});
 
@@ -103,8 +115,8 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
 
 		IdleStateEvent event= (IdleStateEvent) evt;
 		if(event == IdleStateEvent.READER_IDLE_STATE_EVENT){
-			ctx.channel().writeAndFlush("超时了断开连接~~~~");
-			ctx.close();
+//			ctx.channel().writeAndFlush("超时了断开连接~~~~");
+//			ctx.close();
 		}
 
 
