@@ -29,11 +29,17 @@ public class ImConstant {
 
 
 	public static class CommandConstant{
+		//登陆
 		public static final  int LOGIN = 9000;
 
+		//退出
 		public static final  int LOGOUT = 9001;
 
+		//心跳
 		public static final  int PING = 9002;
+
+		//下线通知 用于多端互斥  9002
+		public static  final int  MUTUALLOGIN = 9003;   //下线通知 用于多端互斥  9002
 
 	}
 
@@ -47,8 +53,11 @@ public class ImConstant {
 
 		public static final Integer OFFLINE = 2;
 
+	}
 
-
+	public static class RedisConstant{
+		public static final String UserLoginChannel
+				= "signal/channel/LOGIN_USER_INNER_QUEUE";
 	}
 
 

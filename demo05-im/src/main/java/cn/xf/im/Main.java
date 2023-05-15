@@ -4,6 +4,7 @@ import cn.xf.im.config.GlobalSetting;
 import cn.xf.im.register.RegistryZK;
 import cn.xf.im.register.ZKit;
 import cn.xf.im.server.NettyServer;
+import cn.xf.im.utils.RedissonUtil;
 import org.I0Itec.zkclient.ZkClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -33,6 +34,9 @@ public class Main implements CommandLineRunner {
 	@Value("${zookeeper.connectionTimeout}")
 	private Integer connectionTimeout;
 
+	@Value("${netty.loginModel}")
+	private Integer loginModel;
+
 	public static void main(String[] args) {
 		SpringApplication.run(Main.class);
 	}
@@ -50,6 +54,9 @@ public class Main implements CommandLineRunner {
 		RegistryZK registryZK = new RegistryZK(zKit, hostAddress);
 		Thread thread = new Thread(registryZK);
 		thread.start();
+		//设置多端同步类型
+		RedissonUtil.init(loginModel);
+
 	}
 
 

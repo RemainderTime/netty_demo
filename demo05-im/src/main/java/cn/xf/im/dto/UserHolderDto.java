@@ -18,4 +18,6 @@ public class UserHolderDto {
 	private Integer appId;
 
 	private Integer clientType;
+
+	private String imei;
 }

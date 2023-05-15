@@ -27,9 +27,6 @@ public class NettyServer {
 
 	private static ServerBootstrap serverBootstrap = null;
 
-//	@Autowired
-//	private GlobalSetting globalSetting;
-
 	public NettyServer() {
 
 		parentGroup = new NioEventLoopGroup();
@@ -47,12 +44,11 @@ public class NettyServer {
 					protected void initChannel(Channel channel) throws Exception {
 
 						ChannelPipeline pipeline = channel.pipeline();
-
 						//自定义编码协议
 						pipeline.addLast(new MessageDecoder());
 						pipeline.addLast(new IdleStateHandler(2, 2, 10));
 						pipeline.addLast(new HeartBeatHandler(3000L));
-						pipeline.addLast(new MyServerHandler());
+						pipeline.addLast(new MyServerHandler(1000));
 					}
 				});
 

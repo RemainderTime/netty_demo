@@ -5,6 +5,8 @@ server:
 netty:
   server:
     port: 9000
+  brokerId: 1000
+  loginModel: 1
 
 
 # redis分布式锁

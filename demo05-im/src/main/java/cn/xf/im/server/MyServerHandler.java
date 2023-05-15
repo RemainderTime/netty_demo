@@ -4,6 +4,7 @@ import cn.xf.im.constants.ImConstant;
 import cn.xf.im.domain.LoginPack;
 import cn.xf.im.domain.Message;
 import cn.xf.im.domain.UserSession;
+import cn.xf.im.dto.UserHolderDto;
 import cn.xf.im.holder.UserChannelHolder;
 import cn.xf.im.utils.RedissonUtil;
 import com.alibaba.fastjson.JSON;
@@ -15,7 +16,10 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
 import org.redisson.api.RMap;
+import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;
+
+import java.net.InetAddress;
 
 /**
  * @Description:
@@ -25,6 +29,14 @@ import org.redisson.api.RedissonClient;
  * @Version: 1.0
  */
 public class MyServerHandler extends SimpleChannelInboundHandler<Message> {
+
+
+	private Integer brokerId;
+
+	public MyServerHandler(Integer brokerId) {
+		this.brokerId = brokerId;
+	}
+
 	@Override
 	protected void channelRead0(ChannelHandlerContext channelHandlerContext, Message msg) throws Exception {
 
@@ -47,13 +59,29 @@ public class MyServerHandler extends SimpleChannelInboundHandler<Message> {
 			userSession.setClientType(msg.getMessageHeader().getClientType());
 			userSession.setAppId(msg.getMessageHeader().getAppId());
 			userSession.setConnectStatus(ImConstant.UserStatusConstant.ONLINE);
+			userSession.setBrokerId(brokerId);
 
+			try {
+				InetAddress localHost = InetAddress.getLocalHost();
+				userSession.setBrokerHost(localHost.getHostAddress());
+			}catch (Exception e){
+				e.printStackTrace();
+			}
 			//存储登陆用户数据到redis中
 			RedissonClient redissonClient = RedissonUtil.getRedissonClient();
 			RMap<Object, Object> map = redissonClient.getMap(msg.getMessageHeader().getAppId() + ImConstant.SessionConstant.USER_SESSION + loginPack.getUserId());
 			map.put(msg.getMessageHeader().getClientType() + ":" + msg.getMessageHeader().getImei(), JSONObject.toJSONString(userSession));
+			UserChannelHolder.channelPut(loginPack.getUserId(), msg.getMessageHeader().getAppId(), msg.getMessageHeader().getClientType(), msg.getMessageHeader().getImei(), (NioSocketChannel)channel);
 
-			UserChannelHolder.channelPut(loginPack.getUserId(), msg.getMessageHeader().getAppId(), msg.getMessageHeader().getClientType(), (NioSocketChannel) channel);
+			//发送登陆订阅消息
+			UserHolderDto userHolderDto =new UserHolderDto();
+			userHolderDto.setImei(msg.getMessageHeader().getImei());
+			userHolderDto.setUserId(loginPack.getUserId());
+			userHolderDto.setAppId(msg.getMessageHeader().getAppId());
+			userHolderDto.setClientType(msg.getMessageHeader().getClientType());
+			RTopic topic = RedissonUtil.getRedissonClient().getTopic(ImConstant.RedisConstant.UserLoginChannel);
+			topic.publish(JSONObject.toJSONString(userHolderDto));
+
 			//用户退出
 		}else if(command == ImConstant.CommandConstant.LOGOUT){
 			Integer userId = (Integer) channel.attr(AttributeKey.valueOf(ImConstant.UserId)).get();
