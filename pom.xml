@@ -14,6 +14,7 @@
         <module>demo03</module>
         <module>demo04</module>
         <module>demo05-im</module>
+        <module>new-demo06</module>
     </modules>
 
     <properties>
@@ -97,7 +98,6 @@
                 <artifactId>zkclient</artifactId>
                 <version>${zkclient.versi}</version>
             </dependency>
-
 
         </dependencies>
     </dependencyManagement>
